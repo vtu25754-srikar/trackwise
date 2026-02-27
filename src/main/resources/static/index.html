@@ -10,19 +10,18 @@
 
 <div class="form-container">
 
+    <input type="hidden" id="expenseId">
+
     <input type="text" id="title" placeholder="Title">
-
     <input type="number" id="amount" placeholder="Amount">
-
     <input type="date" id="date">
-
-    <!-- NEW: User ID -->
     <input type="number" id="userId" placeholder="User ID">
-
-    <!-- NEW: Category ID -->
     <input type="number" id="categoryId" placeholder="Category ID">
 
-    <button onclick="addExpense()">Add Expense</button>
+    <button onclick="saveExpense()" id="saveBtn">Add Expense</button>
+    <button onclick="cancelEdit()" id="cancelBtn" style="display:none; background-color: gray;">
+        Cancel
+    </button>
 
 </div>
 
@@ -35,6 +34,9 @@
             <th>Title</th>
             <th>Amount</th>
             <th>Date</th>
+            <th>User</th>
+            <th>Category</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody id="expenseTable"></tbody>

@@ -3,7 +3,10 @@ package com.trackwise.trackwise.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -14,6 +17,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Expense> expenses;
 
     // ===== Getters and Setters =====

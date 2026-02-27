@@ -10,16 +10,7 @@ function loadExpenses() {
         .then(data => {
             const table = document.getElementById("expenseTable");
             table.innerHTML = "";
-
-            if (data.length === 0) {
-                table.innerHTML = `
-                    <tr>
-                        <td colspan="4">No expenses found</td>
-                    </tr>
-                `;
-                return;
-            }
-
+			console.log(data)
             data.forEach(expense => {
                 const row = `
                     <tr>
@@ -27,96 +18,109 @@ function loadExpenses() {
                         <td>${expense.title}</td>
                         <td>${expense.amount}</td>
                         <td>${expense.date}</td>
+                        <td>${expense.user ? expense.user.id : ''}</td>
+                        <td>${expense.category?.id || ''}</td>
+                        <td class="actions">
+                            <button class="edit-btn" onclick="editExpense(${expense.id})">Edit</button>
+                            <button class="delete-btn" onclick="deleteExpense(${expense.id})">Delete</button>
+                        </td>
                     </tr>
                 `;
                 table.innerHTML += row;
             });
-        })
-        .catch(error => {
-            alert("Error loading expenses "+error);
-            console.error(error);
         });
 }
 
-function addExpense() {
+function saveExpense() {
 
-    const titleInput = document.getElementById("title");
-    const amountInput = document.getElementById("amount");
-    const dateInput = document.getElementById("date");
-    const userIdInput = document.getElementById("userId");
-    const categoryIdInput = document.getElementById("categoryId");
+    const id = document.getElementById("expenseId").value;
+    const title = document.getElementById("title").value;
+    const amount = document.getElementById("amount").value;
+    const date = document.getElementById("date").value;
+    const userId = document.getElementById("userId").value;
+    const categoryId = document.getElementById("categoryId").value;
 
-    const title = titleInput.value.trim();
-    const amount = amountInput.value.trim();
-    const date = dateInput.value;
-    const userId = userIdInput.value.trim();
-    const categoryId = categoryIdInput.value.trim();
+    const expenseData = {
+        title: title,
+        amount: parseFloat(amount),
+        date: date,
+        user: { id: parseInt(userId) },
+        category: { id: parseInt(categoryId) }
+    };
 
-    // =============================
-    // 🔎 VALIDATION
-    // =============================
-
-    if (title === "") {
-        alert("Title cannot be empty");
-        return;
-    }
-
-    if (amount === "" || isNaN(amount) || parseFloat(amount) <= 0) {
-        alert("Enter valid amount");
-        return;
-    }
-
-    if (date === "") {
-        alert("Select date");
-        return;
-    }
-
-    if (userId === "" || isNaN(userId)) {
-        alert("Enter valid User ID");
-        return;
-    }
-
-    if (categoryId === "" || isNaN(categoryId)) {
-        alert("Enter valid Category ID");
-        return;
-    }
-
-    // =============================
-    // 🚀 SEND DATA
-    // =============================
-
-    fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            amount: parseFloat(amount),
-            date: date,
-			title: title,
-            category: { id: parseInt(categoryId) },
-			user: { id: parseInt(userId) }
+    if (id) {
+        // UPDATE
+        fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(expenseData)
         })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to add expense");
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert("Expense added successfully!");
+        .then(() => {
+            alert("Expense Updated!");
+            resetForm();
+            loadExpenses();
+        });
+    } else {
+        // CREATE
+        fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(expenseData)
+        })
+        .then(() => {
+            alert("Expense Added!");
+            resetForm();
+            loadExpenses();
+        });
+    }
+}
 
-        titleInput.value = "";
-        amountInput.value = "";
-        dateInput.value = "";
-        userIdInput.value = "";
-        categoryIdInput.value = "";
+function editExpense(id) {
 
+    fetch(`${API_URL}/${id}`)
+        .then(response => response.json())
+        .then(expense => {
+
+            document.getElementById("expenseId").value = expense.id;
+            document.getElementById("title").value = expense.title;
+            document.getElementById("amount").value = expense.amount;
+            document.getElementById("date").value = expense.date;
+            document.getElementById("userId").value = expense.user ? expense.user.id : "";
+            document.getElementById("categoryId").value = expense.category ? expense.category.id : "";
+
+            document.getElementById("saveBtn").innerText = "Update Expense";
+            document.getElementById("cancelBtn").style.display = "inline";
+        });
+}
+
+function deleteExpense(id) {
+
+    if (!confirm("Are you sure you want to delete this expense?")) {
+        return;
+    }
+
+    fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+    })
+    .then(() => {
+        alert("Expense Deleted!");
         loadExpenses();
-    })
-    .catch(error => {
-        alert("Error adding expense");
-        console.error(error);
     });
+}
+
+function cancelEdit() {
+    resetForm();
+}
+
+function resetForm() {
+
+    document.getElementById("expenseId").value = "";
+    document.getElementById("title").value = "";
+    document.getElementById("amount").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("userId").value = "";
+    document.getElementById("categoryId").value = "";
+
+    document.getElementById("saveBtn").innerText = "Add Expense";
+    document.getElementById("cancelBtn").style.display = "none";
 }

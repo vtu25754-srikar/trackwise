@@ -1,7 +1,9 @@
 package com.trackwise.trackwise.controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,5 +37,10 @@ public class AuthController {
     @PostMapping("/login")
     public User login(@RequestBody LoginRequest request) {
         return authService.login(request.getEmail(), request.getPassword());
+    }
+    
+    @PutMapping("/update/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        return authService.updateUser(id, updatedUser);
     }
 }

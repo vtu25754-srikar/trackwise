@@ -35,4 +35,14 @@ public class AuthService {
 
         return dbUser;
     }
+    
+    public User updateUser(Long id, User updatedUser) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setName(updatedUser.getName());
+        user.setMonthlyLimit(updatedUser.getMonthlyLimit());
+
+        return userRepository.save(user);
+    }
 }

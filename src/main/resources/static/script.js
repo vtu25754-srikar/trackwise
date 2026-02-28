@@ -32,19 +32,31 @@ function loadExpenses() {
 
     fetch(`http://localhost:9090/api/expenses/user/${user.id}`)
         .then(res => res.json())
-        .then(data => {
+        .then(expenses => {
+
+            let total = 0;
+
+            expenses.forEach(exp => {
+                total += exp.amount;
+            });
+
+            if (total > user.monthlyLimit) {
+                showLimitWarning(total);
+            }
+
             const table = document.getElementById("expenseTable");
             table.innerHTML = "";
-			console.log(data)
-            data.forEach(expense => {
+
+            console.log("Expenses:", expenses); // DEBUG
+
+            expenses.forEach(expense => {
                 const row = `
                     <tr>
                         <td>${expense.id}</td>
                         <td>${expense.title}</td>
                         <td>${expense.amount}</td>
                         <td>${expense.date}</td>
-                        <td>${expense.user ? expense.user.id : ''}</td>
-                        <td>${expense.category?.id || ''}</td>
+                        <td>${expense.category ? expense.category.name : ''}</td>
                         <td class="actions">
                             <button class="edit-btn" onclick="editExpense(${expense.id})">Edit</button>
                             <button class="delete-btn" onclick="deleteExpense(${expense.id})">Delete</button>
@@ -53,9 +65,11 @@ function loadExpenses() {
                 `;
                 table.innerHTML += row;
             });
+        })
+        .catch(err => {
+            console.error("Error loading expenses:", err);
         });
 }
-
 function saveExpense() {
 
     const expenseData = {
@@ -144,4 +158,15 @@ function resetForm() {
 function logout() {
     localStorage.removeItem("loggedUser");
     window.location.href = "login.html";
+}
+
+function showLimitWarning(total) {
+    document.getElementById("warningText").innerText =
+        `You have spent ₹${total}, which exceeds your monthly limit of ₹${user.monthlyLimit}`;
+
+    document.getElementById("warningModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("warningModal").style.display = "none";
 }

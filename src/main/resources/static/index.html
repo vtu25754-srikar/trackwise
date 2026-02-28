@@ -8,6 +8,12 @@
 
 <h1>TrackWise - Expense Tracker</h1>
 
+<a href="settings.html">
+    <button>Settings</button>
+</a>
+
+<button onclick="logout()">Logout</button>
+
 <div class="form-container">
 
     <input type="hidden" id="expenseId">
@@ -45,7 +51,13 @@
     <tbody id="expenseTable"></tbody>
 </table>
 
-<button onclick="logout()">Logout</button>
+<div id="warningModal" class="modal">
+    <div class="modal-content">
+        <h3>⚠ Monthly Limit Exceeded!</h3>
+        <p id="warningText"></p>
+        <button onclick="closeModal()">Close</button>
+    </div>
+</div>
 
 <script src="script.js"></script>
 

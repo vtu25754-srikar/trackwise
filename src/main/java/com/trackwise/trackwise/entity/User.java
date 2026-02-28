@@ -14,7 +14,17 @@ public class User {
     private Long id;
 
     private String name;
+    @Column(unique = true)
     private String email;
+
+    private String password;
+    public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	private Double monthlyLimit;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -33,4 +43,12 @@ public class User {
 
     public List<Expense> getExpenses() { return expenses; }
     public void setExpenses(List<Expense> expenses) { this.expenses = expenses; }
+	public Double getMonthlyLimit() {
+		return monthlyLimit;
+	}
+	public void setMonthlyLimit(Double monthlyLimit) {
+		this.monthlyLimit = monthlyLimit;
+	}
+
+	public User() {}
 }

@@ -1,5 +1,6 @@
 package com.trackwise.trackwise.service;
 
+import com.trackwise.trackwise.dto.ExpenseResponse;
 import com.trackwise.trackwise.entity.Category;
 import com.trackwise.trackwise.entity.Expense;
 import com.trackwise.trackwise.entity.User;
@@ -26,7 +27,7 @@ public class ExpenseService {
         this.categoryRepository = categoryRepository;
     }
     // CREATE
-    public Expense saveExpense(Expense expense) {
+    public ExpenseResponse saveExpense(Expense expense) {
 
         Long userId = expense.getUser().getId();
         Long categoryId = expense.getCategory().getId();
@@ -39,15 +40,34 @@ public class ExpenseService {
 
         expense.setUser(user);
         expense.setCategory(category);
+        
+     // SAVE EXPENSE
+        Expense savedExpense = expenseRepository.save(expense);
 
-        return expenseRepository.save(expense);
+        // CHECK TOTAL
+        Double total = expenseRepository.totalExpenseByUser(userId);
+        if (total == null) total = 0.0;
+
+        String warning = null;
+
+        if (user.getMonthlyLimit() != null && total > user.getMonthlyLimit()) {
+            warning = "⚠ Monthly limit exceeded!";
+        }
+
+        return new ExpenseResponse(savedExpense, warning);
+
+        
     }
 
     // READ ALL
     public List<Expense> getAllExpenses() {
         return expenseRepository.findAll();
     }
-
+    
+    public List<Expense> getExpensesByUser(Long userId) {
+        return expenseRepository.findByUserId(userId);
+    }
+    
     // READ BY ID
     public Expense getExpenseById(Long id) {
         return expenseRepository.findById(id)
@@ -83,6 +103,24 @@ public class ExpenseService {
         }
 
         expenseRepository.deleteById(id);
+    }
+    
+    public String checkOverspending(Long userId) {
+
+        Double total = expenseRepository.totalExpenseByUser(userId);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (total == null) {
+            total = 0.0;
+        }
+
+        if (user.getMonthlyLimit() != null && total > user.getMonthlyLimit()) {
+            return "⚠ WARNING: Overspending detected!";
+        }
+
+        return "Within budget";
     }
 
     // TOTAL BY USER

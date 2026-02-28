@@ -15,11 +15,14 @@
     <input type="text" id="title" placeholder="Title">
     <input type="number" id="amount" placeholder="Amount">
     <input type="date" id="date">
-    <input type="number" id="userId" placeholder="User ID">
-    <input type="number" id="categoryId" placeholder="Category ID">
+
+    <select id="categoryId">
+        <option value="">Select Category</option>
+    </select>
 
     <button onclick="saveExpense()" id="saveBtn">Add Expense</button>
-    <button onclick="cancelEdit()" id="cancelBtn" style="display:none; background-color: gray;">
+    <button onclick="cancelEdit()" id="cancelBtn" 
+            style="display:none; background-color: gray;">
         Cancel
     </button>
 
@@ -41,6 +44,8 @@
     </thead>
     <tbody id="expenseTable"></tbody>
 </table>
+
+<button onclick="logout()">Logout</button>
 
 <script src="script.js"></script>
 

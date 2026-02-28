@@ -29,4 +29,6 @@ public class Category {
 
     public List<Expense> getExpenses() { return expenses; }
     public void setExpenses(List<Expense> expenses) { this.expenses = expenses; }
+
+    public Category() {}
 }

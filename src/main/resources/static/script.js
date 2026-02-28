@@ -1,12 +1,37 @@
 const API_URL = "http://localhost:9090/api/expenses";
 
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+if (!user) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+}
+function loadCategories() {
+    fetch("http://localhost:9090/api/categories")
+        .then(res => res.json())
+        .then(categories => {
+            const dropdown = document.getElementById("categoryId");
+
+            categories.forEach(cat => {
+                const option = document.createElement("option");
+                option.value = cat.id;        // backend id
+                option.textContent = cat.name; // visible name
+                dropdown.appendChild(option);
+            });
+        });
+}
 window.onload = function () {
     loadExpenses();
+	loadCategories();
 };
 
+
+
 function loadExpenses() {
-    fetch(API_URL)
-        .then(response => response.json())
+    const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+    fetch(`http://localhost:9090/api/expenses/user/${user.id}`)
+        .then(res => res.json())
         .then(data => {
             const table = document.getElementById("expenseTable");
             table.innerHTML = "";
@@ -33,46 +58,37 @@ function loadExpenses() {
 
 function saveExpense() {
 
-    const id = document.getElementById("expenseId").value;
-    const title = document.getElementById("title").value;
-    const amount = document.getElementById("amount").value;
-    const date = document.getElementById("date").value;
-    const userId = document.getElementById("userId").value;
-    const categoryId = document.getElementById("categoryId").value;
-
     const expenseData = {
-        title: title,
-        amount: parseFloat(amount),
-        date: date,
-        user: { id: parseInt(userId) },
-        category: { id: parseInt(categoryId) }
+        title: document.getElementById("title").value,
+        amount: parseFloat(document.getElementById("amount").value),
+        date: document.getElementById("date").value,
+        user: { id: user.id },
+        category: { 
+            id: parseInt(document.getElementById("categoryId").value)
+        }
     };
 
-    if (id) {
-        // UPDATE
-        fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(expenseData)
-        })
-        .then(() => {
-            alert("Expense Updated!");
-            resetForm();
-            loadExpenses();
-        });
-    } else {
-        // CREATE
-        fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(expenseData)
-        })
-        .then(() => {
-            alert("Expense Added!");
-            resetForm();
-            loadExpenses();
-        });
-    }
+    console.log("Sending:", expenseData); // DEBUG
+
+    fetch("http://localhost:9090/api/expenses", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(expenseData)
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Failed to add expense");
+        }
+        return res.json();
+    })
+    .then(data => {
+        alert("Expense Added Successfully!");
+        loadExpenses();
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Error adding expense");
+    });
 }
 
 function editExpense(id) {
@@ -123,4 +139,9 @@ function resetForm() {
 
     document.getElementById("saveBtn").innerText = "Add Expense";
     document.getElementById("cancelBtn").style.display = "none";
+}
+
+function logout() {
+    localStorage.removeItem("loggedUser");
+    window.location.href = "login.html";
 }

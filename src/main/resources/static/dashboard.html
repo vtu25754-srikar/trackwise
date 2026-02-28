@@ -1,0 +1,48 @@
+<h2>Add Expense</h2>
+
+<input type="text" id="title" placeholder="Title">
+<input type="number" id="amount" placeholder="Amount">
+
+<select id="categoryDropdown"></select>
+
+<button onclick="addExpense()">Add Expense</button>
+
+<script>
+const userId = localStorage.getItem("userId");
+
+// Load categories
+fetch("http://localhost:8080/api/categories")
+.then(res => res.json())
+.then(categories => {
+    const dropdown = document.getElementById("categoryDropdown");
+    categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat.id;
+        option.text = cat.name;
+        dropdown.appendChild(option);
+    });
+});
+
+// Add expense
+function addExpense() {
+
+    fetch(`http://localhost:9090/api/expenses?userId=${userId}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            title: title.value,
+            amount: amount.value,
+            category: { id: categoryDropdown.value },
+            user: { id: userId }
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.warning) {
+            alert(data.warning);
+        } else {
+            alert("Expense Added");
+        }
+    });
+}
+</script>

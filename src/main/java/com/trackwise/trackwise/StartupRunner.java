@@ -11,6 +11,7 @@ public class StartupRunner implements CommandLineRunner {
         System.out.println("==========================================");
         System.out.println("🚀 Application Started Successfully!");
         System.out.println("🌐 Open Frontend: http://localhost:9090/index.html");
-        System.out.println("==========================================");
+        System.out.println("🌐 Open Frontend: http://localhost:9090/login.html");
+        System.out.println("🌐 Open Frontend: http://localhost:9090/register.html");
     }
 }

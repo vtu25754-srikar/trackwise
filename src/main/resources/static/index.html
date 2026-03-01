@@ -6,56 +6,69 @@
 </head>
 <body>
 
-<h1>TrackWise - Expense Tracker</h1>
+<div class="container">
 
-<a href="settings.html">
-    <button>Settings</button>
-</a>
+    <!-- Header -->
+    <div class="header">
+        <h1>TrackWise</h1>
+        <div class="header-actions">
+            <a href="settings.html" class="btn secondary">Settings</a>
+            <button onclick="logout()" class="btn danger">Logout</button>
+        </div>
+    </div>
 
-<button onclick="logout()">Logout</button>
+    <!-- Add Expense Card -->
+    <div class="card">
+        <h2>Add Expense</h2>
 
-<div class="form-container">
+        <input type="hidden" id="expenseId">
 
-    <input type="hidden" id="expenseId">
+        <div class="form-row">
+            <input type="text" id="title" placeholder="Title">
+            <input type="number" id="amount" placeholder="Amount">
+            <input type="date" id="date">
+            <select id="categoryId">
+                <option value="">Select Category</option>
+            </select>
+        </div>
 
-    <input type="text" id="title" placeholder="Title">
-    <input type="number" id="amount" placeholder="Amount">
-    <input type="date" id="date">
+        <div class="form-actions">
+            <button onclick="saveExpense()" id="saveBtn" class="btn primary">
+                + Add Expense
+            </button>
+            <button onclick="cancelEdit()" id="cancelBtn" 
+                    class="btn gray" style="display:none;">
+                Cancel
+            </button>
+        </div>
+    </div>
 
-    <select id="categoryId">
-        <option value="">Select Category</option>
-    </select>
+    <!-- Expense Table Card -->
+    <div class="card">
+        <h2>All Expenses</h2>
 
-    <button onclick="saveExpense()" id="saveBtn">Add Expense</button>
-    <button onclick="cancelEdit()" id="cancelBtn" 
-            style="display:none; background-color: gray;">
-        Cancel
-    </button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="expenseTable"></tbody>
+        </table>
+    </div>
 
 </div>
 
-<h2>All Expenses</h2>
-
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>User</th>
-            <th>Category</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody id="expenseTable"></tbody>
-</table>
-
+<!-- Warning Modal -->
 <div id="warningModal" class="modal">
     <div class="modal-content">
-        <h3>⚠ Monthly Limit Exceeded!</h3>
+        <h3>⚠ Monthly Limit Exceeded</h3>
         <p id="warningText"></p>
-        <button onclick="closeModal()">Close</button>
+        <button onclick="closeModal()" class="btn primary">Close</button>
     </div>
 </div>
 

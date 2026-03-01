@@ -1,0 +1,89 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== BACKGROUND ===== */
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1f1c4a, #3c2f7f);
+}
+
+/* ===== MAIN CARD ===== */
+.auth-card {
+    width: 340px;
+    padding: 40px 30px 80px 30px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #2d2566, #2a215d);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.auth-card h2 {
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* ===== INPUTS ===== */
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: #ddd;
+    font-size: 14px;
+}
+
+/* ===== BUTTON ===== */
+.auth-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background: #6a49c8;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-top: 5px;
+}
+
+.auth-btn:hover {
+    background: #7d5cf0;
+}
+
+/* ===== CURVED BOTTOM SECTION ===== */
+.auth-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background: #e5e5e5;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-top-left-radius: 60% 100%;
+    border-top-right-radius: 60% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-bottom a {
+    text-decoration: none;
+    color: #2d2566;
+    font-weight: 600;
+}

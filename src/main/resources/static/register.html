@@ -1,15 +1,36 @@
-<h2>Register</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
 
-<input type="text" id="name" placeholder="Name">
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
-<input type="number" id="limit" placeholder="Monthly Limit">
+<div class="auth-card">
+    <h2>Sign Up</h2>
 
-<button onclick="register()">Register</button>
+    <div class="input-group">
+        <input type="text" id="name" placeholder="User name">
+    </div>
 
-<p>Already have an account? 
-   <a href="login.html">Login here</a>
-</p>
+    <div class="input-group">
+        <input type="email" id="email" placeholder="Email">
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" placeholder="Password">
+    </div>
+
+    <div class="input-group">
+        <input type="number" id="monthlyLimit" placeholder="Monthly Limit">
+    </div>
+
+    <button class="auth-btn" onclick="register()">Sign up</button>
+
+    <div class="auth-bottom">
+        <a href="login.html">Login</a>
+    </div>
+</div>
 
 <script>
 function register() {
@@ -20,13 +41,17 @@ function register() {
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
             password: document.getElementById("password").value,
-            monthlyLimit: parseFloat(document.getElementById("limit").value)
+            monthlyLimit: parseFloat(document.getElementById("monthlyLimit").value)
         })
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data);
         alert("Registered Successfully");
-    });
+        window.location.href = "login.html";
+    })
+    .catch(err => alert("Registration failed"));
 }
 </script>
+
+</body>
+</html>

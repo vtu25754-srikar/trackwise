@@ -6,18 +6,28 @@
 </head>
 <body>
 
-<h2>Profile Settings</h2>
+<div class="settings-wrapper">
 
-<div class="form-container">
+    <div class="settings-card">
+        <h2>Profile Settings</h2>
 
-    <input type="text" id="name" placeholder="Name">
-    <input type="number" id="limit" placeholder="Monthly Limit">
+        <div class="settings-form">
+            <input type="text" id="name" placeholder="Name">
+            <input type="number" id="limit" placeholder="Monthly Limit">
+            
+            <button onclick="updateProfile()" class="btn primary full-width">
+                Update Profile
+            </button>
+        </div>
 
-    <button onclick="updateProfile()">Update Profile</button>
+        <div class="divider"></div>
+
+        <a href="index.html" class="back-link">
+            <- Back to Dashboard
+        </a>
+    </div>
 
 </div>
-
-<a href="index.html">⬅ Back to Dashboard</a>
 
 <script src="settings.js"></script>
 
